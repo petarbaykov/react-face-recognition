@@ -24,11 +24,7 @@ const particlesOptions = {
     }
   }
 };
-
-class App extends Component {
-  constructor(){
-    super();
-    this.state = {
+const ininitalSate = {
       input:'',
       imageUrl:'',
       box:{},
@@ -41,7 +37,11 @@ class App extends Component {
           entries:0,
           joined:''
       }
-    };
+}
+class App extends Component {
+  constructor(){
+    super();
+    this.state = ininitalSate;
   }
 
   loadUser = (data) => {
@@ -84,7 +84,7 @@ class App extends Component {
       app.models.predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
       .then(response => {
         if(response){
-          fetch('http://localhost:3001/image',{
+          fetch('https://react-face-recognition-api.herokuapp.com/image',{
               method:'post',
               headers:{'Content-Type':'application/json'},
               body:JSON.stringify({
@@ -95,6 +95,7 @@ class App extends Component {
           .then(count => {
             this.setState(Object.assign(this.state.user,{entries:count}));
           })
+
         }
         this.displayFaceBox(this.calculateFaceLocation(response))
       })
@@ -104,9 +105,9 @@ class App extends Component {
 
   onRouteChange = (route) =>{
     if(route === 'signout'){
-      this.setState({isSignedIn:false});
+      this.setState(ininitalSate);
     }else if(route === 'home'){
-      this.setState({isSignedIn:true});
+      this.setState({route:''});
     }
     this.setState({route:route});
   }
